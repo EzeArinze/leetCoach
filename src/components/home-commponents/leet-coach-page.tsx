@@ -5,10 +5,7 @@ import ProblemInput from "../leet-components/problem-input";
 import { toast } from "sonner";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import type { SavedProblem } from "../../utils/types";
-import { useStreamTips } from "../../services/api-services/request-tips";
-// import { useRequestExplanation } from "../../services/api-services/request-explanation";
 import { useResponseContext } from "../../context/response-context";
-import { useStreamExplanation } from "../../services/api-services/request-explanation";
 
 export default function Home() {
   const [problem, setProblem] = useState("");
@@ -18,24 +15,20 @@ export default function Home() {
     []
   );
 
-  const { setTipResponse, setExplanationResponse } = useResponseContext();
-
-  const { mutate: TipsMutattion, isPending: isLoadingTips } = useStreamTips(
-    (token) => {
-      setTipResponse((prev: string) => prev + token);
-    }
-  );
-
-  const { mutate: ExplanationMutation, isPending: isLoadingExplanation } =
-    useStreamExplanation((token) => {
-      setExplanationResponse((prev: string) => prev + token);
-    });
+  const {
+    setTipResponse,
+    setExplanationResponse,
+    TipsMutation,
+    isLoadingTips,
+    ExplanationMutation,
+    isLoadingExplanation,
+  } = useResponseContext();
 
   const handleGetTips = async () => {
     if (!problem.trim()) return;
     setTipResponse("");
 
-    TipsMutattion(problem, {
+    TipsMutation(problem, {
       onError: (error) => {
         console.error("Error fetching tips:", error);
         setTipResponse("Failed to fetch tips");
