@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "../supabase";
-import { Tips } from "@/utils/types";
+import type { Tips } from "../../utils/types";
 
 // Inserting the tips from the backend
 
@@ -21,13 +21,13 @@ export function useInsertTips() {
 }
 
 // Getting the tips from the backend
-export const GetTips = async () => {
+export const GetTips = async (): Promise<string[]> => {
   const { data } = await supabase.from("Tips").select();
-  return data;
+  return data || [];
 };
 
 export const useTips = () => {
-  return useQuery({
+  return useQuery<string[]>({
     queryKey: ["tips"],
     queryFn: GetTips,
   });

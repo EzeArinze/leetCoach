@@ -1,32 +1,18 @@
-"use client";
-
-import { Button } from "../../components/ui/button";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "../../components/ui/tabs";
-// import dynamic from "next/dynamic";
-
-// Dynamically import CodeMirror for response display
-// const CodeMirrorEditor = dynamic(() => import("./code-mirror-editor"), {
-//   ssr: false,
-//   loading: () => (
-//     <div className="animate-pulse bg-gray-800 rounded-md h-[200px]"></div>
-//   ),
-// });
 
 interface ResponseDisplayProps {
   tipResponse: string;
   explanationResponse: string;
-  onDontUnderstand: () => void;
 }
 
 export default function ResponseDisplay({
   tipResponse,
   explanationResponse,
-  onDontUnderstand,
 }: ResponseDisplayProps) {
   return (
     <div className="space-y-4">
@@ -70,12 +56,6 @@ export default function ResponseDisplay({
           )}
         </TabsContent>
       </Tabs>
-
-      <div className="text-center">
-        <Button variant="link" onClick={onDontUnderstand}>
-          Still don&quot;t understand? Get more resources
-        </Button>
-      </div>
     </div>
   );
 }

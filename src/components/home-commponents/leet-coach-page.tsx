@@ -3,59 +3,54 @@ import { useState } from "react";
 import SavedProblems from "../leet-components/saved-problems";
 import ProblemInput from "../leet-components/problem-input";
 import ResponseDisplay from "../leet-components/response-display";
-import AdditionalResources from "../leet-components/additional-resources";
 import { toast } from "sonner";
-import {
-  tipsResponse,
-  explanationResponseValue,
-} from "../../utils/constants/dummyResponse";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
-
-interface SavedProblem {
-  id: number;
-  title: string;
-  description: string;
-}
+import type { SavedProblem } from "../../utils/types";
+import { useRequestTips } from "../../services/api-services/request-tips";
+import { useRequestExplanation } from "../../services/api-services/request-explanation";
 
 export default function Home() {
   const [problem, setProblem] = useState("");
+  const [isSaved, setIsSaved] = useState(false);
   const [tipResponse, setTipResponse] = useState("");
   const [explanationResponse, setExplanationResponse] = useState("");
-  const [isLoadingTips, setIsLoadingTips] = useState(false);
-  const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
-  const [showResources, setShowResources] = useState(false);
   const [savedProblems, setSavedProblems] = useLocalStorage<SavedProblem[]>(
     "savedProblems",
     []
   );
 
+  const { mutate: TipsMutattion, isPending: isLoadingTips } = useRequestTips();
+  const { mutate: ExplanationMutation, isPending: isLoadingExplanation } =
+    useRequestExplanation();
+
   const handleGetTips = async () => {
     if (!problem.trim()) return;
-
-    setIsLoadingTips(true);
     setTipResponse("");
-    setShowResources(false);
 
-    // Simulate AI response with a delay
-    setTimeout(() => {
-      setIsLoadingTips(false);
-      setTipResponse(tipsResponse);
-    }, 2000);
+    TipsMutattion(problem, {
+      onSuccess: (data) => {
+        setTipResponse(data);
+      },
+      onError: (error) => {
+        console.error("Error fetching tips:", error);
+        setTipResponse("Failed to fetch tips");
+      },
+    });
   };
 
   const handleExplainProblem = async () => {
     if (!problem.trim()) return;
-
-    setIsLoadingExplanation(true);
     setExplanationResponse("");
-    setShowResources(false);
 
-    // Simulate AI response with a delay
-    setTimeout(() => {
-      setIsLoadingExplanation(false);
-      setExplanationResponse(explanationResponseValue);
-    }, 2000);
+    ExplanationMutation(problem, {
+      onSuccess(data) {
+        setExplanationResponse(data);
+      },
+      onError(error) {
+        toast.error(error.message);
+        setExplanationResponse("Failed to get explanation on this problem");
+      },
+    });
   };
 
   const handleSaveForLater = () => {
@@ -74,10 +69,8 @@ export default function Home() {
     setIsSaved(true);
 
     toast("Event has been created", {
-      description: "Sunday, December 03, 2023 at 9:00 AM",
       duration: 3000,
     });
-
     // Reset saved status after 3 seconds for demo purposes
     setTimeout(() => setIsSaved(false), 3000);
   };
@@ -87,11 +80,6 @@ export default function Home() {
     // Reset responses
     setTipResponse("");
     setExplanationResponse("");
-    setShowResources(false);
-  };
-
-  const handleDontUnderstand = () => {
-    setShowResources(true);
   };
 
   return (
@@ -129,11 +117,8 @@ export default function Home() {
               <ResponseDisplay
                 tipResponse={tipResponse}
                 explanationResponse={explanationResponse}
-                onDontUnderstand={handleDontUnderstand}
               />
             )}
-
-            {showResources && <AdditionalResources />}
           </div>
         </div>
       </main>
