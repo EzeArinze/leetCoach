@@ -31,6 +31,11 @@ export const streamExplanation = async (
 
   while (true) {
     const { done, value } = await reader.read();
+    //check if the stream is done then break and save the data to our database if we want to
+    // if (done && value) {
+    //   const data = decoder.decode(value);
+    //   console.log("Stream done", data);
+    //   break;}
     if (done) break;
 
     const chunk = decoder.decode(value);
