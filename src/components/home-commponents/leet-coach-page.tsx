@@ -2,22 +2,22 @@ import { useState } from "react";
 
 import SavedProblems from "../leet-components/saved-problems";
 import ProblemInput from "../leet-components/problem-input";
-import ResponseDisplay from "../leet-components/response-display";
 import { toast } from "sonner";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import type { SavedProblem } from "../../utils/types";
 import { useRequestTips } from "../../services/api-services/request-tips";
 import { useRequestExplanation } from "../../services/api-services/request-explanation";
+import { useResponseContext } from "../../context/response-context";
 
 export default function Home() {
   const [problem, setProblem] = useState("");
   const [isSaved, setIsSaved] = useState(false);
-  const [tipResponse, setTipResponse] = useState("");
-  const [explanationResponse, setExplanationResponse] = useState("");
   const [savedProblems, setSavedProblems] = useLocalStorage<SavedProblem[]>(
     "savedProblems",
     []
   );
+
+  const { setTipResponse, setExplanationResponse } = useResponseContext();
 
   const { mutate: TipsMutattion, isPending: isLoadingTips } = useRequestTips();
   const { mutate: ExplanationMutation, isPending: isLoadingExplanation } =
@@ -56,7 +56,6 @@ export default function Home() {
   const handleSaveForLater = () => {
     if (!problem.trim()) return;
 
-    // Create a new problem entry
     const newProblem = {
       id: savedProblems.length + 1,
       title: `Problem ${savedProblems.length + 1}`,
@@ -64,14 +63,12 @@ export default function Home() {
         problem.substring(0, 100) + (problem.length > 100 ? "..." : ""),
     };
 
-    // Add to saved problems
     setSavedProblems([...savedProblems, newProblem]);
     setIsSaved(true);
 
     toast("Event has been created", {
       duration: 3000,
     });
-    // Reset saved status after 3 seconds for demo purposes
     setTimeout(() => setIsSaved(false), 3000);
   };
 
@@ -83,8 +80,8 @@ export default function Home() {
   };
 
   return (
-    <section className="flex-1 flex flex-col items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-md m-2 p-6">
-      <main className="flex min-h-screen flex-col items-center w-full p-4 rounded-lg">
+    <section className="flex-1 flex flex-col items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-md m-2 p-4">
+      <main className="flex min-[80%] flex-col items-center w-full p-4 rounded-lg">
         <div className="w-full max-w-[800px] space-y-8">
           <div className="flex flex-col gap-2 w-full">
             <div className="flex justify-between items-center mb-2">
@@ -112,13 +109,6 @@ export default function Home() {
               isLoadingExplanation={isLoadingExplanation}
               isSaved={isSaved}
             />
-
-            {(tipResponse || explanationResponse) && (
-              <ResponseDisplay
-                tipResponse={tipResponse}
-                explanationResponse={explanationResponse}
-              />
-            )}
           </div>
         </div>
       </main>

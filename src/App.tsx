@@ -1,29 +1,11 @@
-// import Header from "./components/home-commponents/header";
-// import Home from "./components/home-commponents/leet-coach-page";
-// import SolutionPage from "./components/home-commponents/solution-page";
-
-// function App() {
-//   return (
-//     <main className="min-h-dvh w-full bg-gray-50 dark:bg-gray-900 flex flex-col ">
-//       <header className="flex content-center justify-between p-2 sticky top-0 z-50 bg-background border-b ">
-//         <Header />
-//       </header>
-//       <div className="flex flex-1 flex-col md:flex-row items-stretch justify-center gap-0 md:gap-2 p-2">
-//         <Home />
-
-//         <SolutionPage />
-//       </div>
-//     </main>
-//   );
-// }
-
-// export default App;
-
 import Split from "react-split";
 import Header from "./components/home-commponents/header";
 import Home from "./components/home-commponents/leet-coach-page";
 import SolutionPage from "./components/home-commponents/solution-page";
 // import "react-split/style.css"; // optional, basic styling
+
+const constColors =
+  "overflow-auto bg-white dark:bg-gray-800 rounded p-2 w-full min-h-[300px]";
 
 function App() {
   return (
@@ -32,21 +14,38 @@ function App() {
         <Header />
       </header>
 
-      <Split
-        className="flex-1 flex flex-col md:flex-row p-2 gap-2 "
-        direction="horizontal"
-        sizes={[50, 50]}
-        minSize={200}
-        gutterSize={6}
-        cursor="col-resize"
-      >
-        <div className="overflow-auto bg-white dark:bg-gray-800 rounded p-2 w-full md:w-1/2 min-h-[300px]">
-          <Home />
+      {/* Responsive container */}
+      <div className="flex-1 flex flex-col items-stretch justify-center p-3">
+        <div className="w-full flex flex-col gap-2">
+          {/* On md+ use Split, on mobile use stacked layout */}
+          <div className="hidden md:flex w-full gap-2">
+            <Split
+              className="flex w-full gap-2"
+              direction="horizontal"
+              sizes={[50, 50]}
+              minSize={200}
+              gutterSize={6}
+              cursor="col-resize"
+            >
+              <div className={`${constColors}`}>
+                <Home />
+              </div>
+              <div className={`${constColors}`}>
+                <SolutionPage />
+              </div>
+            </Split>
+          </div>
+          {/* Mobile stacked layout */}
+          <div className="flex flex-col gap-2 md:hidden w-full">
+            <div className={`${constColors}`}>
+              <Home />
+            </div>
+            <div className={`${constColors}`}>
+              <SolutionPage />
+            </div>
+          </div>
         </div>
-        <div className="overflow-auto bg-white dark:bg-gray-800 rounded p-2 w-full md:w-1/2 min-h-[300px] mt-2 md:mt-0">
-          <SolutionPage />
-        </div>
-      </Split>
+      </div>
     </main>
   );
 }

@@ -28,8 +28,8 @@ export default function SavedProblems({
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          <List className="h-4 w-4 mr-2" />
-          <span className="hidden sm:block">Saved Problems</span>
+          <List className="h-4 w-4 mr-2 " />
+          {/* <span className="hidden">Saved Problems</span> */}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

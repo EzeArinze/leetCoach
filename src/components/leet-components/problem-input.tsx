@@ -1,16 +1,9 @@
 import { Button } from "../../components/ui/button";
 import { Loader2, BookmarkPlus, CheckCircle, HelpCircle } from "lucide-react";
-import CodeMirrorEditor from "./code-mirror-editor";
+// import CodeMirrorEditor from "./code-mirror-editor";
+import { lazy, Suspense } from "react";
 
-// Dynamically import CodeMirror to avoid SSR issues
-// const CodeMirrorEditor = dynamic(() => import("./code-mirror-editor"), {
-//   ssr: false,
-//   loading: () => (
-//     <div className="border rounded-md bg-gray-900 text-gray-400 p-4 min-h-[250px] flex items-center justify-center">
-//       Loading editor...
-//     </div>
-//   ),
-// });
+const CodeMirrorEditor = lazy(() => import("./code-mirror-editor"));
 
 interface ProblemInputProps {
   problem: string;
@@ -35,16 +28,24 @@ export default function ProblemInput({
 }: ProblemInputProps) {
   return (
     <div className="space-y-4">
-      <CodeMirrorEditor
-        value={problem}
-        onChange={setProblem}
-        placeholder="Paste your LeetCode problem here..."
-        language="javascript"
-      />
+      <Suspense
+        fallback={
+          <div className="border rounded-md bg-gray-900 text-gray-400 p-4 min-h-[250px] flex items-center justify-center">
+            Loading editor...
+          </div>
+        }
+      >
+        <CodeMirrorEditor
+          value={problem}
+          onChange={setProblem}
+          placeholder="Paste your LeetCode problem here..."
+          language="javascript"
+        />
+      </Suspense>
 
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="grid grid-cols-1 gap-3 w-full sm:grid-cols-2 sm:gap-3">
         <Button
-          className="flex-1"
+          className="w-full"
           onClick={onGetTips}
           disabled={isLoadingTips || !problem.trim()}
         >
@@ -59,7 +60,7 @@ export default function ProblemInput({
         </Button>
 
         <Button
-          className="flex-1"
+          className="w-full"
           variant="outline"
           onClick={onExplainProblem}
           disabled={isLoadingExplanation || !problem.trim()}
@@ -78,7 +79,7 @@ export default function ProblemInput({
         </Button>
 
         <Button
-          className="flex-1"
+          className="w-full"
           variant="secondary"
           onClick={onSaveForLater}
           disabled={!problem.trim() || isSaved}

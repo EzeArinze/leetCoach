@@ -5,7 +5,7 @@ import { api } from "../axios-instance";
 export const RequestExplanation = async (problem: string) => {
   try {
     const response = await api.post("/completions", {
-      model: "microsoft/phi-4-reasoning-plus:free",
+      model: "google/gemma-3-27b-it:free",
       messages: [
         {
           role: "user",
