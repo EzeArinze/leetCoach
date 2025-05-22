@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { Play, Beaker } from "lucide-react";
-import CodeMirrorEditor from "./code-mirror-editor";
+// import CodeMirrorEditor from "./code-mirror-editor";
 import { Button } from "../ui/button";
 import { getPlaceholder } from "../../utils/constant";
 import type { ExecutionResult } from "../../utils/types";
@@ -9,12 +9,17 @@ import { executeCode } from "../../utils/simulate";
 import { useLanguageContext } from "../../context/language-context";
 import Error from "../error";
 
+import { lazy, Suspense } from "react";
+
+const CodeMirrorEditor = lazy(() => import("./code-mirror-editor"));
+
 export default function SolutionEditor() {
   const [isRunning, setIsRunning] = useState(false);
   const [executionResult, setExecutionResult] =
     useState<ExecutionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [solution, setSolution] = useState("");
+
   const { selectedLanguage } = useLanguageContext();
 
   // Define some default test cases for the Two Sum problem
@@ -45,13 +50,21 @@ export default function SolutionEditor() {
   return (
     <div className="h-full flex flex-col">
       <div className="flex-1 overflow-hidden">
-        <CodeMirrorEditor
-          value={solution}
-          onChange={setSolution}
-          placeholder={getPlaceholder(selectedLanguage)}
-          headerTitle="Your Solution"
-          className="h-full"
-        />
+        <Suspense
+          fallback={
+            <div className="border rounded-md bg-gray-900 text-gray-400 p-4 min-h-[250px] flex items-center justify-center">
+              Loading editor...
+            </div>
+          }
+        >
+          <CodeMirrorEditor
+            value={solution}
+            onChange={setSolution}
+            placeholder={getPlaceholder(selectedLanguage)}
+            headerTitle="Your Solution"
+            className="h-full"
+          />
+        </Suspense>
       </div>
 
       <div className="mt-4 shrink-0">
@@ -87,11 +100,11 @@ export default function SolutionEditor() {
             )}
           </div>
           <div className="bg-gray-900 text-gray-100 p-4 font-mono text-sm whitespace-pre-wrap max-h-[150px] overflow-auto hide-scrollbar">
-            {executionResult.output}
+            {/* {executionResult.output} */}
 
             {executionResult.testResults &&
               executionResult.testResults.length > 0 && (
-                <div className="mt-4 border-t border-gray-700 pt-4">
+                <div className="">
                   <div className="font-semibold mb-2">Test Results:</div>
                   <table className="w-full">
                     <thead>
