@@ -5,9 +5,10 @@ import ProblemInput from "../leet-components/problem-input";
 import { toast } from "sonner";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import type { SavedProblem } from "../../utils/types";
-import { useRequestTips } from "../../services/api-services/request-tips";
-import { useRequestExplanation } from "../../services/api-services/request-explanation";
+import { useStreamTips } from "../../services/api-services/request-tips";
+// import { useRequestExplanation } from "../../services/api-services/request-explanation";
 import { useResponseContext } from "../../context/response-context";
+import { useStreamExplanation } from "../../services/api-services/request-explanation";
 
 export default function Home() {
   const [problem, setProblem] = useState("");
@@ -19,18 +20,22 @@ export default function Home() {
 
   const { setTipResponse, setExplanationResponse } = useResponseContext();
 
-  const { mutate: TipsMutattion, isPending: isLoadingTips } = useRequestTips();
+  const { mutate: TipsMutattion, isPending: isLoadingTips } = useStreamTips(
+    (token) => {
+      setTipResponse((prev: string) => prev + token);
+    }
+  );
+
   const { mutate: ExplanationMutation, isPending: isLoadingExplanation } =
-    useRequestExplanation();
+    useStreamExplanation((token) => {
+      setExplanationResponse((prev: string) => prev + token);
+    });
 
   const handleGetTips = async () => {
     if (!problem.trim()) return;
     setTipResponse("");
 
     TipsMutattion(problem, {
-      onSuccess: (data) => {
-        setTipResponse(data);
-      },
       onError: (error) => {
         console.error("Error fetching tips:", error);
         setTipResponse("Failed to fetch tips");
@@ -43,9 +48,6 @@ export default function Home() {
     setExplanationResponse("");
 
     ExplanationMutation(problem, {
-      onSuccess(data) {
-        setExplanationResponse(data);
-      },
       onError(error) {
         toast.error(error.message);
         setExplanationResponse("Failed to get explanation on this problem");

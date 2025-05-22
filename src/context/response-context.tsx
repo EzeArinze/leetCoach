@@ -9,8 +9,8 @@ import {
 interface ResponseContextType {
   tipResponse: string;
   explanationResponse: string;
-  setTipResponse: (response: string) => void;
-  setExplanationResponse: (response: string) => void;
+  setTipResponse: React.Dispatch<React.SetStateAction<string>>;
+  setExplanationResponse: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const ResponseContext = createContext<ResponseContextType | undefined>(
