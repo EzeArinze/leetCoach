@@ -1,10 +1,11 @@
-import { useState } from "react";
+// import { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
 import { java } from "@codemirror/lang-java";
 import { cpp } from "@codemirror/lang-cpp";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { useLanguageContext } from "../../context/language-context";
 
 interface CodeMirrorEditorProps {
   value: string;
@@ -12,16 +13,18 @@ interface CodeMirrorEditorProps {
   language?: "javascript" | "python" | "java" | "cpp";
   placeholder?: string;
   className?: string;
+  headerTitle?: string;
 }
 
 export default function CodeMirrorEditor({
   value,
   onChange,
-  language = "javascript",
+  // language = "javascript",
   placeholder = "",
   className = "",
+  headerTitle,
 }: CodeMirrorEditorProps) {
-  const [selectedLanguage, setSelectedLanguage] = useState(language);
+  const { selectedLanguage, setSelectedLanguage } = useLanguageContext();
 
   // Get language extension based on selected language
   const getLanguageExtension = () => {
@@ -43,7 +46,7 @@ export default function CodeMirrorEditor({
       {/* Editor header */}
       <div className="flex items-center justify-between px-4 py-2 bg-gray-800 dark:bg-gray-900 border-b border-gray-700">
         <div className="text-xs font-medium text-gray-300">
-          Problem Statement
+          {headerTitle || "Problem Statement "}
         </div>
         <div className="flex items-center space-x-3">
           <select

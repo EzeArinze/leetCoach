@@ -9,7 +9,7 @@ const constColors =
 
 function App() {
   return (
-    <main className="min-h-dvh w-full bg-gray-50 dark:bg-gray-900 flex flex-col">
+    <main className="min-h-dvh w-full bg-gray-50 dark:bg-gray-900 flex flex-col ">
       <header className="flex content-center justify-between p-2 sticky top-0 z-50 bg-background border-b">
         <Header />
       </header>
@@ -40,7 +40,7 @@ function App() {
             <div className={`${constColors}`}>
               <Home />
             </div>
-            <div className={`${constColors}`}>
+            <div className={`${constColors} `}>
               <SolutionPage />
             </div>
           </div>
