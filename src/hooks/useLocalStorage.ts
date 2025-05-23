@@ -3,7 +3,10 @@ import { toast } from "sonner";
 
 type WithId = { id: string | number };
 
-export function useLocalStorage<T>(key: string, initialValue: T) {
+export function useLocalStorage<T extends WithId[]>(
+  key: string,
+  initialValue: T
+) {
   const [savedProblems, setSavedProblems] = useState<T>(() => {
     if (typeof window === "undefined") {
       return initialValue;
@@ -25,15 +28,6 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
     }
   }, [key, savedProblems]);
 
-  const removeItemById = (idToRemove: string | number) => {
-    if (!Array.isArray(savedProblems)) return;
-
-    const updated = (savedProblems as WithId[]).filter(
-      (item) => item.id !== idToRemove
-    );
-    setSavedProblems(updated as T);
-  };
-
   const clearStorage = () => {
     if (typeof window === "undefined") return;
     try {
@@ -44,10 +38,5 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
     }
   };
 
-  return [
-    savedProblems,
-    setSavedProblems,
-    removeItemById,
-    clearStorage,
-  ] as const;
+  return [savedProblems, setSavedProblems, clearStorage] as const;
 }

@@ -1,7 +1,6 @@
 import { useState } from "react";
 
-import { Play, Beaker } from "lucide-react";
-// import CodeMirrorEditor from "./code-mirror-editor";
+import { Play, Beaker, LogIn } from "lucide-react";
 import { Button } from "../ui/button";
 import { getPlaceholder } from "../../utils/constant";
 import type { ExecutionResult } from "../../utils/types";
@@ -10,6 +9,7 @@ import { useLanguageContext } from "../../context/language-context";
 import Error from "../error";
 
 import { lazy, Suspense } from "react";
+import { useSupabaseUser } from "../../hooks/useSupabaseUser";
 
 const CodeMirrorEditor = lazy(() => import("./code-mirror-editor"));
 
@@ -21,6 +21,9 @@ export default function SolutionEditor() {
   const [solution, setSolution] = useState("");
 
   const { selectedLanguage } = useLanguageContext();
+  const { user } = useSupabaseUser();
+
+  const isDisabled = !user || isRunning || !solution.trim();
 
   // Define some default test cases for the Two Sum problem
   const testCases = [
@@ -71,7 +74,7 @@ export default function SolutionEditor() {
         <Button
           className="w-full"
           onClick={handleRunCode}
-          disabled={isRunning || !solution.trim()}
+          disabled={isDisabled}
         >
           {isRunning ? (
             <>
@@ -80,8 +83,17 @@ export default function SolutionEditor() {
             </>
           ) : (
             <>
-              <Play className="mr-2 h-4 w-4" />
-              Run Code
+              {!user ? (
+                <>
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Sign in
+                </>
+              ) : (
+                <>
+                  <Play className="mr-2 h-4 w-4" />
+                  Run Code
+                </>
+              )}
             </>
           )}
         </Button>

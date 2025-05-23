@@ -3,17 +3,16 @@ import { useState } from "react";
 import SavedProblems from "../leet-components/saved-problems";
 import ProblemInput from "../leet-components/problem-input";
 import { toast } from "sonner";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
-import type { SavedProblem } from "../../utils/types";
 import { useResponseContext } from "../../context/response-context";
+import { useProblemQueries } from "../../services/api-services/problem-service";
 
 export default function Home() {
   const [problem, setProblem] = useState("");
   const [isSaved, setIsSaved] = useState(false);
-  const [savedProblems, setSavedProblems] = useLocalStorage<SavedProblem[]>(
-    "savedProblems",
-    []
-  );
+
+  const { useSaveProblems, useFetchProblems } = useProblemQueries();
+  const { mutate: MutateSaveProblems, isPending } = useSaveProblems();
+  const { data: savedProblems } = useFetchProblems();
 
   const {
     setTipResponse,
@@ -52,19 +51,21 @@ export default function Home() {
     if (!problem.trim()) return;
 
     const newProblem = {
-      id: savedProblems.length + 1,
-      title: `Problem ${savedProblems.length + 1}`,
+      title: `Problem ${(savedProblems ?? []).length + 1}`,
       description:
         problem.substring(0, 100) + (problem.length > 100 ? "..." : ""),
     };
 
-    setSavedProblems([...savedProblems, newProblem]);
-    setIsSaved(true);
+    MutateSaveProblems(newProblem);
 
-    toast("Event has been created", {
-      duration: 3000,
-    });
-    setTimeout(() => setIsSaved(false), 3000);
+    if (!isPending) {
+      setIsSaved(true);
+      toast("Problem saved successfully", {
+        duration: 3000,
+        position: "top-center",
+        style: { color: "green", backgroundColor: "white" },
+      });
+    }
   };
 
   const loadSavedProblem = (problemText: string) => {

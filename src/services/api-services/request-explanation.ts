@@ -16,7 +16,7 @@ export const streamExplanation = async (
       messages: [
         {
           role: "user",
-          content: `You are the best summarizer and the best at Explainig complex and any other problems in the hole world,Explain the following leetcode problem do not provide answer jsut the explanation: ${problem}`,
+          content: `You are the best summarizer and the best at Explainig complex leetcode and any other problems in the hole world, Explain the following leetcode problem do not provide answer jsut the explanation, make it concise and understandable, we don't want to be reading a lot of things and provide a little example: ${problem}`,
         },
       ],
     }),

@@ -17,7 +17,7 @@ export const streamTips = async (
       messages: [
         {
           role: "user",
-          content: `You are the best summarizer and the best at giving tips to complex and any other problems in the hole world,Give me tips the following LeetCode problem without solving it: ${problem}`,
+          content: `You are the best summarizer and the best at giving tips to complex leetcode and any other problems in the hole world, Give me tips to the following LeetCode problem without solving it, make so understandable: ${problem}`,
         },
       ],
     }),
