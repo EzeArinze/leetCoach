@@ -15,13 +15,14 @@ interface SaveProblem {
 
 export function useProblemQueries() {
   const { user } = useSupabaseUser();
+  const queryClient = useQueryClient();
 
   //Create problem based on user
   async function SaveProblems(problem: SaveProblem): Promise<void> {
     try {
       await supabase
         .from("Problems")
-        .insert([{ ...problem, id: user?.id }])
+        .insert([{ ...problem, user_id: user?.id }])
         .select();
     } catch (error) {
       const isError = error instanceof Error ? error.message : "";
@@ -32,7 +33,9 @@ export function useProblemQueries() {
   const useSaveProblems = () => {
     return useMutation({
       mutationFn: (problem: SaveProblem) => SaveProblems(problem),
-      mutationKey: ["saving-problems"],
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["problems", user?.id] });
+      },
     });
   };
 
@@ -44,7 +47,7 @@ export function useProblemQueries() {
     const { data, error } = await supabase
       .from("Problems")
       .select("*")
-      .eq("id", user.id)
+      .eq("user_id", user.id)
       .order("id", { ascending: false });
     if (error) {
       throw new Error("Failed to fetch problems: " + error.message);
@@ -57,6 +60,7 @@ export function useProblemQueries() {
     useQuery({
       queryKey: ["problems", user?.id],
       queryFn: () => fetchProblems(),
+      refetchOnWindowFocus: false,
     });
 
   /// delete a problem
@@ -66,7 +70,6 @@ export function useProblemQueries() {
   }
 
   const useDeleteProblem = () => {
-    const queryClient = useQueryClient();
     return useMutation({
       mutationFn: (id: string) => deleteProblem(id),
       onSuccess: () => {
