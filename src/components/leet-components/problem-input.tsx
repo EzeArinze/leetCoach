@@ -2,6 +2,7 @@ import { Button } from "../../components/ui/button";
 import { Loader2, BookmarkPlus, CheckCircle, HelpCircle } from "lucide-react";
 // import CodeMirrorEditor from "./code-mirror-editor";
 import { lazy, Suspense } from "react";
+import { useSupabaseUser } from "../../hooks/useSupabaseUser";
 
 const CodeMirrorEditor = lazy(() => import("./code-mirror-editor"));
 
@@ -26,6 +27,10 @@ export default function ProblemInput({
   isLoadingExplanation,
   isSaved,
 }: ProblemInputProps) {
+  const { user } = useSupabaseUser();
+
+  const isDisabled = !user || !problem.trim() || isSaved;
+
   return (
     <div className="space-y-4">
       <Suspense
@@ -82,7 +87,7 @@ export default function ProblemInput({
           className="w-full"
           variant="secondary"
           onClick={onSaveForLater}
-          disabled={!problem.trim() || isSaved}
+          disabled={isDisabled}
         >
           {isSaved ? (
             <>
@@ -91,8 +96,17 @@ export default function ProblemInput({
             </>
           ) : (
             <>
-              <BookmarkPlus className="mr-2 h-4 w-4" />
-              Save For Later
+              {!user ? (
+                <>
+                  <BookmarkPlus className="mr-2 h-4 w-4" />
+                  Sign in to save
+                </>
+              ) : (
+                <>
+                  <BookmarkPlus className="mr-2 h-4 w-4" />
+                  Save For Later
+                </>
+              )}
             </>
           )}
         </Button>

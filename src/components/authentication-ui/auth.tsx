@@ -17,7 +17,7 @@ export default function SignIn() {
       <CardHeader>
         <CardTitle className="text-lg md:text-xl">Sign In</CardTitle>
         <CardDescription className="text-xs md:text-sm">
-          Enter your email below to login to your account
+          Click the link below to sign in
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -31,7 +31,7 @@ export default function SignIn() {
             {/* Add another auth provider if need be */}
             <Button
               variant="outline"
-              className={cn("w-full gap-2")}
+              className={cn("w-full gap-2 hover:cursor-pointer")}
               onClick={() => SignInWithGithub()}
             >
               <svg
@@ -53,7 +53,10 @@ export default function SignIn() {
       <CardFooter>
         <div className="flex justify-center w-full border-t py-4">
           <p className="text-center text-xs text-neutral-500">
-            Happy <span className="dark:text-orange-200/90">Coding...</span>
+            Happy{" "}
+            <span className="dark:text-orange-200/90">
+              Coding & Learning...
+            </span>
           </p>
         </div>
       </CardFooter>

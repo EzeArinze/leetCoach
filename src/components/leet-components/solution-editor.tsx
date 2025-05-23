@@ -86,7 +86,7 @@ export default function SolutionEditor() {
               {!user ? (
                 <>
                   <LogIn className="mr-2 h-4 w-4" />
-                  Sign in
+                  Sign in To Run
                 </>
               ) : (
                 <>
