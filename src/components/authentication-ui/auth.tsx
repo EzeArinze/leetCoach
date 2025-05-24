@@ -54,9 +54,7 @@ export default function SignIn() {
         <div className="flex justify-center w-full border-t py-4">
           <p className="text-center text-xs text-neutral-500">
             Happy{" "}
-            <span className="dark:text-orange-200/90">
-              Coding & Learning...
-            </span>
+            <span className="dark:text-orange-200/90">Coding & Learning..</span>
           </p>
         </div>
       </CardFooter>
