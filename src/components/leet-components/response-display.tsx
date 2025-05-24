@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Tabs,
   TabsContent,
@@ -21,13 +22,26 @@ export default function ResponseDisplay({
   tipResponse,
   explanationResponse,
 }: ResponseDisplayProps) {
+  const [tab, setTab] = useState("tips");
+
   return (
     <div className="space-y-4">
-      <Tabs defaultValue="tips" className="w-full ">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="tips">Tips & Hints</TabsTrigger>
-          <TabsTrigger value="explanation">Problem Explanation</TabsTrigger>
-          <TabsTrigger value="solution">Solution</TabsTrigger>
+      <Tabs
+        defaultValue="tips"
+        className="w-full "
+        value={tab}
+        onValueChange={setTab}
+      >
+        <TabsList className="grid w-full grid-cols-3 ">
+          <TabsTrigger value="tips" className="hover:cursor-pointer">
+            Tips & Hints
+          </TabsTrigger>
+          <TabsTrigger value="explanation" className="hover:cursor-pointer">
+            Problem Explanation
+          </TabsTrigger>
+          <TabsTrigger value="solution" className="hover:cursor-pointer">
+            Solution
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="tips" className="mt-2">
           {tipResponse ? (
@@ -60,15 +74,23 @@ export default function ResponseDisplay({
           )}
         </TabsContent>
 
-        <TabsContent value="solution" className="mt-2 w-full ">
+        {/* <TabsContent value="solution" className="mt-2 w-full ">
           <div className="rounded-md overflow-hidden ">
             <span className={`${headerColors}`}>Solution</span>
             <div className=" overflow-auto max-h-full font-mono text-sm ">
               <SolutionEditor />
             </div>
           </div>
-        </TabsContent>
+        </TabsContent> */}
       </Tabs>
+      <div className={tab === "solution" ? "block" : "hidden"}>
+        <div className="rounded-md overflow-hidden">
+          <span className={`${headerColors}`}>Solution</span>
+          <div className="overflow-auto max-h-full font-mono text-sm">
+            <SolutionEditor />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

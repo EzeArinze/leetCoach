@@ -1,11 +1,7 @@
-// import { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
-import { python } from "@codemirror/lang-python";
-import { java } from "@codemirror/lang-java";
-import { cpp } from "@codemirror/lang-cpp";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { useLanguageContext } from "../../context/language-context";
+import { getLanguageExtension } from "../../utils/get-language-extension";
 
 interface CodeMirrorEditorProps {
   value: string;
@@ -25,21 +21,6 @@ export default function CodeMirrorEditor({
   headerTitle,
 }: CodeMirrorEditorProps) {
   const { selectedLanguage, setSelectedLanguage } = useLanguageContext();
-
-  // Get language extension based on selected language
-  const getLanguageExtension = () => {
-    switch (selectedLanguage) {
-      case "python":
-        return python();
-      case "java":
-        return java();
-      case "cpp":
-        return cpp();
-      case "javascript":
-      default:
-        return javascript();
-    }
-  };
 
   return (
     <div className={`border rounded-md overflow-hidden ${className}`}>
@@ -76,7 +57,7 @@ export default function CodeMirrorEditor({
         value={value}
         height="250px"
         theme={vscodeDark}
-        extensions={[getLanguageExtension()]}
+        extensions={[getLanguageExtension(selectedLanguage)]}
         onChange={onChange}
         placeholder={placeholder}
         basicSetup={{

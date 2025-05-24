@@ -19,6 +19,8 @@ export interface TestResult {
   expected: string;
   actual: string;
   passed: boolean;
+  executionTime?: string;
+  memoryUsed?: string;
 }
 
 export interface ExecutionResult {
@@ -26,6 +28,4 @@ export interface ExecutionResult {
   output: string;
   testResults?: TestResult[];
   error?: string;
-  executionTime?: string;
-  memoryUsed?: string;
 }

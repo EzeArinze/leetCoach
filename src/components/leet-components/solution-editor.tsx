@@ -27,8 +27,14 @@ export default function SolutionEditor() {
 
   // Define some default test cases for the Two Sum problem
   const testCases = [
-    { input: [2, 7, 11, 15], target: 9, expected: [0, 1] },
-    { input: [3, 2, 4], target: 6, expected: [1, 2] },
+    {
+      input: "twoSum([2,7,11,15], 9)",
+      expected: "[0,1]",
+    },
+    {
+      input: "twoSum([3,2,4], 6)",
+      expected: "[1,2]",
+    },
   ];
 
   const handleRunCode = async () => {
@@ -104,12 +110,13 @@ export default function SolutionEditor() {
         <div className="mt-4 border rounded-md overflow-hidden shrink-0">
           <div className="bg-gray-800 text-gray-300 px-4 py-2 text-xs font-medium border-b border-gray-700 flex justify-between">
             <span>Output</span>
-            {executionResult.executionTime && executionResult.memoryUsed && (
-              <span>
-                Runtime: {executionResult.executionTime} | Memory:{" "}
-                {executionResult.memoryUsed}
-              </span>
-            )}
+            {executionResult.testResults?.at(0)?.executionTime &&
+              executionResult.testResults?.at(0)?.memoryUsed && (
+                <span>
+                  Runtime: {executionResult.testResults?.at(0)?.executionTime} |
+                  Memory: {executionResult.testResults?.at(0)?.memoryUsed}
+                </span>
+              )}
           </div>
           <div className="bg-gray-900 text-gray-100 p-4 font-mono text-sm whitespace-pre-wrap max-h-[150px] overflow-auto hide-scrollbar">
             {/* {executionResult.output} */}
