@@ -12,7 +12,7 @@ export const streamTips = async (
       Authorization: `Bearer ${import.meta.env.VITE_LEET_COACH_API_KEY}`,
     },
     body: JSON.stringify({
-      model: "deepseek/deepseek-r1:free",
+      model: "google/gemma-3-27b-it:free",
       stream: true,
       messages: [
         {
